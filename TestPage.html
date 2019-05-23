@@ -1,0 +1,34 @@
+<title>TestPage</title>
+
+<script type="text/javascript">
+
+  function getByName()
+  {
+     var name=prompt("Please enter your name","")
+     if (name!=null && name!="")
+     {
+       window.open("localhost:53604/api/users/?name=" + name);
+     }
+  }
+
+  function getByID()
+  {
+     var name=prompt("Please enter your ID","")
+     if (name!=null && name!="")
+     {
+       window.open("localhost:53604/api/users/" + name);
+     }
+  }
+</script>
+
+<br>
+<br>
+<button onclick="window.open('localhost:53604/api/users')">getUsers</button>
+
+<br>
+<br>
+<button onclick="getByName()">getUserByName</button>
+
+<br>
+<br>
+<button onclick="getByID()">getUserByID</button>
