@@ -41,9 +41,19 @@ namespace WebApi.Controllers
         {
         }
 
-        // PUT: api/Users/5
-        public void Put(int id, [FromBody]string value)
+        // PUT: api/Users
+        public HttpResponseMessage Put([FromBody]User user)
         {
+            int index = users.FindIndex(user1 => user1.id == user.id);
+            if(index >= 0)
+            {
+                users[index] = user;
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
         }
 
         // DELETE: api/Users/5
