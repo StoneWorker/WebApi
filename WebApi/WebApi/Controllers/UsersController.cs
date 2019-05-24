@@ -30,9 +30,9 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Users/?name=Jim
-        public User Get(string name)
+        public IEnumerable<User> Get(string name)
         {
-            return users.Find(user => user.name == name);
+            return users.FindAll(user => user.name == name);
         }
 
 
