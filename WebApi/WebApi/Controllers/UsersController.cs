@@ -12,11 +12,11 @@ namespace WebApi.Controllers
     {
        private List<User> users = new List<User>
         {
-            new User{id=1,name="Jim123",password="123456",selectedDate="",selectedPlace="",voted=false },
-            new User{id=2,name="Jim",password="123456",selectedDate="",selectedPlace="",voted=false },
-            new User{id=3,name="Lily",password="123456",selectedDate="",selectedPlace="",voted=false },
+            new User{id=1,name="Jim123",password="e10adc3949ba59abbe56e057f20f883e",selectedDate="",selectedPlace="",voted=false },
+            new User{id=2,name="Jim",   password="e10adc3949ba59abbe56e057f20f883e",selectedDate="",selectedPlace="",voted=false },
+            new User{id=3,name="Lily",  password="e10adc3949ba59abbe56e057f20f883e",selectedDate="",selectedPlace="",voted=false },
         };
-
+         
         // GET: api/Users
         public IEnumerable<User> Get()
         {
