@@ -36,19 +36,30 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Users/2
-        public DataRow Get(int id)
+        public User Get(int id)
         {
             string SelectCmdText = String.Format( "select * from users where id={0}",id );
             Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
             MyDataSet = new DataSet();
             Myadapter.Fill(MyDataSet, "users");
-            return MyDataSet.Tables["users"].Rows[0];
+            User user = new User();
+            user.id = (int)MyDataSet.Tables["users"].Rows[0]["id"];
+            user.name = (string)MyDataSet.Tables["users"].Rows[0]["name"];
+            user.password = (string)MyDataSet.Tables["users"].Rows[0]["password"];
+            user.selectedDate = (string)MyDataSet.Tables["users"].Rows[0]["selectedDate"];
+            user.selectedPlace = (string)MyDataSet.Tables["users"].Rows[0]["selectedPlace"];
+            user.voted = (bool)MyDataSet.Tables["users"].Rows[0]["voted"];
+            return user;
         }
 
         // GET: api/Users/?name=Jim
-        public IEnumerable<User> Get(string name)
+        public DataTable Get(string name)
         {
-            return users.FindAll(user => user.name == name);
+            string SelectCmdText = String.Format("select * from users where name='{0}'", name);
+            Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
+            MyDataSet = new DataSet();
+            Myadapter.Fill(MyDataSet, "users");
+            return MyDataSet.Tables["users"];
         }
 
 
@@ -60,10 +71,22 @@ namespace WebApi.Controllers
         // PUT: api/Users
         public HttpResponseMessage Put([FromBody]User user)
         {
-            int index = users.FindIndex(user1 => user1.id == user.id);
-            if(index >= 0)
+            string SelectCmdText = String.Format("select * from users where id={0}", user.id);
+            Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
+            MyDataSet = new DataSet();
+            Myadapter.Fill(MyDataSet, "users");
+
+            MyDataSet.Tables["users"].Rows[0]["id"] = user.id;
+            MyDataSet.Tables["users"].Rows[0]["name"] = user.name;
+            MyDataSet.Tables["users"].Rows[0]["password"] = user.password;
+            MyDataSet.Tables["users"].Rows[0]["selectedDate"] = user.selectedDate;
+            MyDataSet.Tables["users"].Rows[0]["selectedPlace"] = user.selectedPlace;
+            MyDataSet.Tables["users"].Rows[0]["voted"] = user.voted;
+
+            SqlCommandBuilder Builder = new SqlCommandBuilder(Myadapter);
+            int changedRows = Myadapter.Update(MyDataSet, "users");
+            if (changedRows >= 1)
             {
-                users[index] = user;
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else
