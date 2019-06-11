@@ -9,7 +9,7 @@ namespace WebApi.Models
     {
         public int id { get; set; }
         public string name { get; set; }
-        public string password { get; set; }
+        //public string password { get; set; }
         public string selectedDate { get; set; }
         public string selectedPlace { get; set; }
         public bool voted { get; set; }
