@@ -67,24 +67,55 @@ namespace WebApi.Controllers
         // POST: api/Users
         public object Post([FromBody]string[] user1)
         {
-            string SelectCmdText = String.Format("select * from users where name='{0}' and password='{1}'", user1[0], user1[1]);
-            Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
-            MyDataSet = new DataSet();
-            Myadapter.Fill(MyDataSet, "users");
-            if (MyDataSet.Tables["users"].Rows.Count > 0)
+            if (user1[2] == "register")
             {
-                User user = new User();
-                user.id = (int)MyDataSet.Tables["users"].Rows[0]["id"];
-                user.name = (string)MyDataSet.Tables["users"].Rows[0]["name"];
-                //user.password = (string)MyDataSet.Tables["users"].Rows[0]["password"];
-                user.selectedDate = (string)MyDataSet.Tables["users"].Rows[0]["selectedDate"];
-                user.selectedPlace = (string)MyDataSet.Tables["users"].Rows[0]["selectedPlace"];
-                user.voted = (bool)MyDataSet.Tables["users"].Rows[0]["voted"];
-                return user;
+
+                string SelectCmdText = "select * from users";
+                Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
+                MyDataSet = new DataSet();
+                Myadapter.Fill(MyDataSet, "users");
+
+                DataRow NewRow = MyDataSet.Tables["users"].NewRow();
+                NewRow["id"] = MyDataSet.Tables["users"].Rows.Count + 1; ;
+                NewRow["name"] = user1[0];
+                NewRow["password"] = user1[1];
+                NewRow["selectedDate"] = "";
+                NewRow["selectedPlace"] = "";
+                NewRow["voted"] = false;
+                MyDataSet.Tables["users"].Rows.Add(NewRow);
+
+                SqlCommandBuilder Builder = new SqlCommandBuilder(Myadapter);
+                int changedRows = Myadapter.Update(MyDataSet, "users");
+                if (changedRows >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return null;
+                string SelectCmdText = String.Format("select * from users where name='{0}' and password='{1}'", user1[0], user1[1]);
+                Myadapter = new SqlDataAdapter(SelectCmdText, ConnecttionStr);
+                MyDataSet = new DataSet();
+                Myadapter.Fill(MyDataSet, "users");
+                if (MyDataSet.Tables["users"].Rows.Count > 0)
+                {
+                    User user = new User();
+                    user.id = (int)MyDataSet.Tables["users"].Rows[0]["id"];
+                    user.name = (string)MyDataSet.Tables["users"].Rows[0]["name"];
+                    //user.password = (string)MyDataSet.Tables["users"].Rows[0]["password"];
+                    user.selectedDate = (string)MyDataSet.Tables["users"].Rows[0]["selectedDate"];
+                    user.selectedPlace = (string)MyDataSet.Tables["users"].Rows[0]["selectedPlace"];
+                    user.voted = (bool)MyDataSet.Tables["users"].Rows[0]["voted"];
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -114,6 +145,7 @@ namespace WebApi.Controllers
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }
+
 
         // DELETE: api/Users/5
         public void Delete(int id)
