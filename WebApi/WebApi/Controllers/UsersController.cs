@@ -65,6 +65,7 @@ namespace WebApi.Controllers
 
 
         // POST: api/Users
+        //[AllowAnonymousAttribute]
         public object Post([FromBody]string[] user1)
         {
             if (user1[2] == "register")
